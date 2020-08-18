@@ -2,6 +2,7 @@
 
     var process = function (content, processes) {
         var data = content.ops[0].scheme;
+        var processNames = {};
         var keys = Object.keys(processes);
 
         for (var i = 0; i < data.length; i++) {
@@ -23,10 +24,15 @@
                         }
                     }
                 }
+
+                processNames[item.obj_id] = item.title;
             }
         }
 
-        return JSON.stringify(processes);
+        return JSON.stringify({
+            processes: processes,
+            processNames: processNames
+        });
     }
 
     callback(null, process(JSON.parse(content), JSON.parse(processes)));

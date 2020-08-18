@@ -118,7 +118,8 @@ namespace Bumblebee
                                 var processes = File.ReadAllText("./processes.json");
                                 dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("process", content, processes));
 
-                                File.WriteAllText("NewProcesses.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+                                File.WriteAllText("NewProcesses.json", JsonConvert.SerializeObject(data.processes, Formatting.Indented));
+                                File.WriteAllText("ProcessNames.json", JsonConvert.SerializeObject(data.processNames, Formatting.Indented));
                             }
 
                             return true;
