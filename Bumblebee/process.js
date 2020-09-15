@@ -1,7 +1,7 @@
 ﻿module.exports = function (callback, content, processes) {
 
     var process = function (content, processes) {
-        var data = content.ops[0].scheme;
+        var data = content;
         var processNames = {};
         var keys = Object.keys(processes);
 

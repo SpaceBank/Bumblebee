@@ -1,7 +1,7 @@
 ﻿module.exports = function (callback, content, processes, sourceStateDiagramId, destinationStateDiagramId) {
 
     var transform = function (content, processes, sourceStateDiagramId, destinationStateDiagramId) {
-        var data = JSON.parse(JSON.stringify(content.ops[0].scheme).replace(new RegExp(("conv[" + sourceStateDiagramId + "]").replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), "g"), "conv[" + destinationStateDiagramId + "]"));
+        var data = JSON.parse(JSON.stringify(content).replace(new RegExp(("conv[" + sourceStateDiagramId + "]").replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), "g"), "conv[" + destinationStateDiagramId + "]"));
         var keys = Object.keys(processes);
 
         for (var i = 0; i < data.length; i++) {
