@@ -14,10 +14,14 @@
                         if (item.params[j].name == "apiRoute") {
                             var apiRoutes = item.params[j].descr.split(";");
 
+                            var apiRoutesKeys = item.params.filter(function (itemParam) {
+                                return itemParam.name == "apiRouteKeys";
+                            })[0].descr.split(";");
+
                             for (var k = 0; k < apiRoutes.length; k++) {
-                                for (var n = 0; n < keys.length; n++) {
-                                    if (processes[keys[n]][apiRoutes[k]]) {
-                                        processes[keys[n]][apiRoutes[k]] = item.obj_id.toString();
+                                for (var n = 0; n < apiRoutesKeys.length; n++) {
+                                    if (processes[apiRoutesKeys[n]][apiRoutes[k]]) {
+                                        processes[apiRoutesKeys[n]][apiRoutes[k]] = item.obj_id.toString();
                                     }
                                 }
                             }

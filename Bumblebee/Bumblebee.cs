@@ -12,7 +12,29 @@ namespace Bumblebee
         {
             if (Variables.Step == "1")
             {
-                var data = await nodeServices.InvokeAsync<string>("transform", File.ReadAllText(Variables.SourceJsonPath), File.ReadAllText("./processes.json"), Variables.SourceStateDiagramId, Variables.DestinationStateDiagramId);
+                Console.WriteLine("Enter source json path:");
+                Variables.SourceJsonPath = Console.ReadLine();
+
+                var enterNextStateDiagramPair = "y";
+
+                while (enterNextStateDiagramPair != "n")
+                {
+                    if (enterNextStateDiagramPair == "y")
+                    {
+                        Console.WriteLine("Enter source state diagram id:");
+                        var sourceStateDiagramId = Console.ReadLine();
+                        Console.WriteLine("Enter destination state diagram id:");
+                        var destinationStateDiagramId = Console.ReadLine();
+
+                        Variables.StateDiagramIds.Add(new StateDiagramIdModel() { SourceStateDiagramId = sourceStateDiagramId, DestinationStateDiagramId = destinationStateDiagramId });
+                    }
+
+                    Console.WriteLine("Are there more state diagram ids? y/n");
+                    enterNextStateDiagramPair = Console.ReadLine();
+                }
+
+
+                var data = await nodeServices.InvokeAsync<string>("transform", File.ReadAllText(Variables.SourceJsonPath), File.ReadAllText("./processes.json"), Variables.StateDiagramIds);
 
                 File.WriteAllText("Content.json", data);
 
@@ -21,7 +43,7 @@ namespace Bumblebee
 
             if (Variables.Step == "2")
             {
-                Console.WriteLine("Enter destination json path");
+                Console.WriteLine("Enter destination json path:");
                 Variables.DestinationJsonPath = Console.ReadLine();
 
                 dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("process", File.ReadAllText(Variables.DestinationJsonPath), File.ReadAllText("./processes.json")));
