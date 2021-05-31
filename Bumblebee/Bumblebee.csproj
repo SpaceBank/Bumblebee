@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="newParameterInAllProcesses.js" />
     <None Remove="process.js" />
     <None Remove="processes.json" />
     <None Remove="transform.js" />
@@ -14,9 +15,13 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.NodeServices" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.1" />
+    <PackageReference Include="Node.js" Version="5.3.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="newParameterInAllProcesses.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="process.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -30,6 +30,14 @@ namespace Bumblebee
                 File.WriteAllText("ProcessNames.json", JsonConvert.SerializeObject(data.processNames, Formatting.Indented));
             }
 
+            if (Variables.Step == "3")
+            {
+                var processes = File.ReadAllText("./processes.json");
+
+                dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("newParameterInAllProcesses", File.ReadAllText(@"C:\Users\giorgi.martiashvili\Desktop\folder_15804_1620990248.json"), processes, "Traceparent"));
+                File.WriteAllText("NewJsonData.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+            }
+
             Console.WriteLine("Done");
         }
     }
