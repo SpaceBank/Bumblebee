@@ -9,7 +9,7 @@ namespace Bumblebee
     {
         static async Task Main()
         {
-            Console.WriteLine("Enter \"1\" to transform source json or \"2\" to process destination json");
+            Console.WriteLine("Enter:\n\"1\" to transform source json\n\"2\" to process destination json\n\"3\" to add new parameter in all processes");
             Variables.Step = Console.ReadLine();
 
             if (Variables.Step == "1")
@@ -18,10 +18,9 @@ namespace Bumblebee
                 Variables.SourceJsonPath = Console.ReadLine();
                 Console.WriteLine("Enter source state diagram id");
                 Variables.SourceStateDiagramId = Console.ReadLine();
+                Console.WriteLine("Enter destination state diagram id");
+                Variables.DestinationStateDiagramId = Console.ReadLine();
             }
-
-            Console.WriteLine("Enter destination state diagram id");
-            Variables.DestinationStateDiagramId = Console.ReadLine();
 
             var services = new ServiceCollection();
             services.AddTransient<Bumblebee>();

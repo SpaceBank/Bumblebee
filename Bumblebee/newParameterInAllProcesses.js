@@ -1,9 +1,9 @@
-﻿module.exports = function (callback, content, processes, newParameter) {
+﻿module.exports = function (callback, content, processes, newParameterSource, newParameterName, newParameterSendToApis) {
 
-    var process = function (content, processes, newParameter) {
+    var process = function (content, processes, newParameterSource, newParameterName, newParameterSendToApis) {
         var data = content;
-        var lowerCamelCaseParam = newParameter.substring(0, 1).toLowerCase() + newParameter.substring(1);
-        var upperCamelCaseParam = newParameter.substring(0, 1).toUpperCase() + newParameter.substring(1);
+        var lowerCamelCaseParam = newParameterName.substring(0, 1).toLowerCase() + newParameterName.substring(1);
+        var upperCamelCaseParam = newParameterName.substring(0, 1).toUpperCase() + newParameterName.substring(1);
 
         var processIds = [];
         var keys = Object.keys(processes.API);
@@ -33,7 +33,10 @@
                     }
                 }
 
-                var newArgument = processIds.includes(item.obj_id.toString()) ? "{{Headers." + upperCamelCaseParam + "}}" : "{{" + lowerCamelCaseParam + "}}";
+                var processArgument = "{{" + lowerCamelCaseParam + "}}";
+                if (processIds.includes(item.obj_id.toString()) && newParameterSource != "Empty") {
+                    processArgument = "{{" + newParameterSource + "." + upperCamelCaseParam + "}}";
+                }
 
                 if (item.scheme.nodes) {
                     for (var j = 0; j < item.scheme.nodes.length; j++) {
@@ -42,13 +45,13 @@
                             for (var k = 0; k < node.condition.logics.length; k++) {
                                 var logic = node.condition.logics[k];
                                 if (logic.type == "api_rpc") {
-                                    logic.extra[lowerCamelCaseParam] = newArgument;
+                                    logic.extra[lowerCamelCaseParam] = processArgument;
                                     logic.extra_type[lowerCamelCaseParam] = "string";
                                 } else if (logic.type == "api_copy") {
-                                    logic.data[lowerCamelCaseParam] = newArgument;
+                                    logic.data[lowerCamelCaseParam] = processArgument;
                                     logic.data_type[lowerCamelCaseParam] = "string";
-                                } else if (logic.type == "api") {
-                                    logic.extra_headers[upperCamelCaseParam] = newArgument;
+                                } else if (logic.type == "api" && newParameterSendToApis == true) {
+                                    logic.extra_headers[upperCamelCaseParam] = processArgument;
                                 }
                             }
                         }
@@ -60,5 +63,5 @@
         return JSON.stringify(content);
     }
 
-    callback(null, process(JSON.parse(content), JSON.parse(processes), newParameter));
+    callback(null, process(JSON.parse(content), JSON.parse(processes), newParameterSource, newParameterName, newParameterSendToApis));
 }

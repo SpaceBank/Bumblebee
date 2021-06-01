@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Bumblebee
@@ -32,6 +33,8 @@ namespace Bumblebee
 
         public async Task TransformProcesses(INodeServices nodeServices)
         {
+            Console.WriteLine();
+            Console.WriteLine();
             var data = await nodeServices.InvokeAsync<string>("transform", File.ReadAllText(Variables.SourceJsonPath), File.ReadAllText("./processes.json"), Variables.SourceStateDiagramId, Variables.DestinationStateDiagramId);
 
             File.WriteAllText("Content.json", data);
@@ -39,6 +42,8 @@ namespace Bumblebee
 
         public async Task GenerateProcessNames(INodeServices nodeServices)
         {
+            Console.WriteLine();
+            Console.WriteLine();
             Console.WriteLine("Enter destination json path");
             Variables.DestinationJsonPath = Console.ReadLine();
 
@@ -46,12 +51,29 @@ namespace Bumblebee
 
             File.WriteAllText("NewProcesses.json", JsonConvert.SerializeObject(data.processes, Formatting.Indented));
             File.WriteAllText("ProcessNames.json", JsonConvert.SerializeObject(data.processNames, Formatting.Indented));
+
+            Thread.Sleep(1000);
         }
 
         public async Task AddNewParamToAll(INodeServices nodeServices)
         {
-            dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("newParameterInAllProcesses", File.ReadAllText(Variables.DestinationJsonPath), File.ReadAllText("NewProcesses.json"), "Traceparent"));
-            File.WriteAllText("NewJsonData.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Enter parameter source (Headers/Request/Empty)");
+            Variables.NewParameterSource = Console.ReadLine();
+            Console.WriteLine("Enter parameter name (UpperCamelCase)");
+            Variables.NewParameterName = Console.ReadLine();
+            Console.WriteLine("Send new parameter to apis (y/n)");
+            Variables.NewParameterSendToApis = Console.ReadLine() == "y" ? true : false;
+
+            dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("newParameterInAllProcesses", 
+                                                                                                File.ReadAllText(Variables.DestinationJsonPath), 
+                                                                                                File.ReadAllText("NewProcesses.json"),
+                                                                                                Variables.NewParameterSource,
+                                                                                                Variables.NewParameterName,
+                                                                                                Variables.NewParameterSendToApis));
+
+            File.WriteAllText("ParameterAdded.json", JsonConvert.SerializeObject(data, Formatting.Indented));
         }
     }
 }
