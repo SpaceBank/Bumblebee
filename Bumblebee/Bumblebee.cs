@@ -63,7 +63,7 @@ namespace Bumblebee
             Variables.NewParameterSource = Console.ReadLine();
             Console.WriteLine("Enter parameter name (UpperCamelCase)");
             Variables.NewParameterName = Console.ReadLine();
-            Console.WriteLine("Send new parameter to apis (y/n)");
+            Console.WriteLine("Send new parameter to apis in Headers (y/n)");
             Variables.NewParameterSendToApis = Console.ReadLine() == "y" ? true : false;
 
             dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("newParameterInAllProcesses", 
