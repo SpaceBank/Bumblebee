@@ -24,7 +24,6 @@ namespace Bumblebee
 
             if (Variables.Step == "3")
             {
-                await GenerateProcessNames(nodeServices);
                 await AddNewParamToAll(nodeServices);
             }
 
@@ -59,21 +58,19 @@ namespace Bumblebee
         {
             Console.WriteLine();
             Console.WriteLine();
-            Console.WriteLine("Enter parameter source (Headers/Request/Empty)");
-            Variables.NewParameterSource = Console.ReadLine();
+            Console.WriteLine("Enter json path");
+            Variables.SourceJsonPath = Console.ReadLine();
             Console.WriteLine("Enter parameter name (UpperCamelCase)");
             Variables.NewParameterName = Console.ReadLine();
             Console.WriteLine("Send new parameter to apis in Headers (y/n)");
             Variables.NewParameterSendToApis = Console.ReadLine() == "y" ? true : false;
 
             dynamic data = JsonConvert.DeserializeObject(await nodeServices.InvokeAsync<string>("newParameterInAllProcesses", 
-                                                                                                File.ReadAllText(Variables.DestinationJsonPath), 
-                                                                                                File.ReadAllText("NewProcesses.json"),
-                                                                                                Variables.NewParameterSource,
+                                                                                                File.ReadAllText(Variables.SourceJsonPath), 
                                                                                                 Variables.NewParameterName,
                                                                                                 Variables.NewParameterSendToApis));
 
-            File.WriteAllText("ParameterAdded.json", JsonConvert.SerializeObject(data, Formatting.Indented));
+            File.WriteAllText("ParameterAdded.json", JsonConvert.SerializeObject(data));
         }
     }
 }
